@@ -24,10 +24,21 @@ from .data import load_clean
 from .pipeline import FEATURES, build_pipeline
 
 
+def split_data(df):
+    X, y = df[FEATURES], df[cfg.TARGET]
+    return train_test_split(X, y, test_size=0.2, stratify=y, random_state=cfg.RANDOM_STATE)
+
+
+def fit_final_model(data_path):
+    """Same split and same pipeline as the notebook; used by main() and by the startup fallback in model_store.py."""
+    df = load_clean(data_path)
+    X_tr, X_te, y_tr, y_te = split_data(df)
+    return build_pipeline().fit(X_tr, y_tr)
+
+
 def main(data_path, out_dir):
     df = load_clean(data_path)
-    X, y = df[FEATURES], df[cfg.TARGET]
-    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, stratify=y, random_state=cfg.RANDOM_STATE)
+    X_tr, X_te, y_tr, y_te = split_data(df)
     pipe = build_pipeline()
 
     cv = StratifiedKFold(5, shuffle=True, random_state=cfg.RANDOM_STATE)

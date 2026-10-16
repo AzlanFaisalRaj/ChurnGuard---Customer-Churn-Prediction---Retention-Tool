@@ -57,3 +57,18 @@ def test_cost_logic():
 def test_feature_list_matches_artifacts():
     a = cfg.ARTIFACTS["features"]
     assert FEATURES == a["numeric"] + a["binary"] + a["categorical"]
+
+
+def test_corrupted_model_file_is_detected(tmp_path):
+    from src.model_store import try_load_saved
+    bad = tmp_path / "bad.joblib"
+    bad.write_bytes(b"this is not a model")
+    model, reason = try_load_saved(bad)
+    assert model is None and reason
+
+
+def test_model_matches_reference_predictions(sample):
+    """Whether the saved model loaded or was retrained, predictions must be close to the notebook's."""
+    ref = cfg.ARTIFACTS["reference_predictions"]
+    res, _, _, _ = predict_dataframe(sample.head(len(ref)))
+    assert np.allclose(res["churn_probability"].values, ref, atol=0.02)

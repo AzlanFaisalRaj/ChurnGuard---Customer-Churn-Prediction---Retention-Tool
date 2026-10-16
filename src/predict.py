@@ -1,19 +1,12 @@
 """Prediction for one customer or a whole table: probability, risk level, decision and top 3 reasons."""
-from functools import lru_cache
-
-import joblib
 import pandas as pd
 
 from . import config as cfg
 from .business import customer_value, risk_level, suggest_offer
 from .data import prepare_input
 from .explain import explain_dataframe
+from .model_store import get_model
 from .pipeline import FEATURES
-
-
-@lru_cache(maxsize=1)
-def get_model():
-    return joblib.load(cfg.MODEL_PATH)
 
 
 def predict_proba(df_clean):

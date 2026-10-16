@@ -2,12 +2,14 @@
 import html
 import os
 import tempfile
+import traceback
 
 import gradio as gr
 import numpy as np
 import pandas as pd
 
 from src import config as cfg
+from src import model_store
 from src.business import customer_value, expected_impact, load_test_impact
 from src.pipeline import FEATURES
 from src.predict import predict_dataframe
@@ -75,6 +77,10 @@ def predict_single(*vals):
         res, clean, reasons, warns = predict_dataframe(pd.DataFrame([row]))
     except ValueError as e:
         return f"<p style='color:#dc2626'><b>{html.escape(str(e))}</b></p>"
+    except Exception as e:      # never hide the real error: print it in the terminal and show the type in the app
+        traceback.print_exc()
+        return (f"<p style='color:#dc2626'><b>Prediction failed: {html.escape(type(e).__name__)}: "
+                f"{html.escape(str(e)[:300])}</b></p>")
     r = res.iloc[0]
     loss = float(r["expected_revenue_at_risk"])
     return render_card(float(r["churn_probability"]), r["risk_level"], reasons[0], r["suggested_offer"], loss, warns)
@@ -122,6 +128,7 @@ def model_info_md():
     m = cfg.ARTIFACTS.get("test_metrics", {})
     return f"""
 ### About the model
+- **Model source:** {model_store.STATUS}
 - **Model:** {cfg.ARTIFACTS.get('model', 'XGBoost')} inside a scikit-learn pipeline (ColumnTransformer + classifier), trained on the IBM Telco Customer Churn data (7,043 customers, 26.5% churn).
 - **Main metric:** PR-AUC (not accuracy: a model that says "nobody churns" is already 73.5% accurate). Held-out test set: **PR-AUC {m.get('pr_auc', 0):.3f}**, ROC-AUC {m.get('roc_auc', 0):.3f}.
 - **Decision threshold {cfg.THRESHOLD:.2f}** (not 0.5): chosen by minimising business cost. At this threshold: precision {m.get('precision', 0):.2f}, recall {m.get('recall', 0):.2f}.
@@ -203,6 +210,7 @@ def build_demo():
     return demo
 
 
+model_store.get_model()          # load (or retrain) once at startup so problems show up immediately
 demo = build_demo()
 
 if __name__ == "__main__":

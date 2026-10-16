@@ -1,18 +1,18 @@
 """Per-customer explanations with SHAP: the top reasons behind each churn probability."""
 from functools import lru_cache
 
-import joblib
 import numpy as np
 import pandas as pd
 import shap
 
 from . import config as cfg
+from .model_store import get_model
 from .pipeline import FEATURES
 
 
 @lru_cache(maxsize=1)
 def _load():
-    pipe = joblib.load(cfg.EXPLAIN_PATH)
+    pipe = get_model()      # the final model is a plain pipeline (no calibration), so it is also the explain pipeline
     prep, clf = pipe.named_steps["prep"], pipe.named_steps["clf"]
     names = list(prep.get_feature_names_out())
     explainer = shap.TreeExplainer(clf)

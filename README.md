@@ -1,4 +1,4 @@
-t ---
+---
 title: ChurnGuard
 emoji: 🛡️
 colorFrom: indigo
@@ -13,7 +13,7 @@ pinned: false
 # ChurnGuard: Customer Churn Prediction & Retention Tool
 
 Predicts which telecom customers are likely to churn, **why**, and which ones are worth an offer.
-Built on imbalanced data with a cost-based decision threshold and  per-customer SHAP explanations.
+Built on imbalanced data with a cost-based decision threshold and per-customer SHAP explanations.
 
 - **Live demo:** `<ADD HUGGING FACE SPACE URL>`
 - **Demo video (2-3 min):** `<ADD LOOM / YOUTUBE URL>`
@@ -144,11 +144,19 @@ git clone <this repo> && cd churnguard
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 python app.py                                          # opens http://127.0.0.1:7860
-pytest -q                                              # 7 tests
+pytest -q                                              # 9 tests
 python -m src.train --out-dir models_retrained         # optional: retrain from the raw CSV
 ```
 Library versions are pinned because the saved model (`joblib`) must be loaded with the same scikit-learn / xgboost versions
 it was trained with (1.6.1, 3.4.1).
+
+### Troubleshooting: model loading and library versions
+A pickled scikit-learn / XGBoost model only works with (almost) the same library versions it was saved with. With other
+versions it can crash with errors such as `input stream corrupted` or `Can't get attribute ...`, or, worse, load and return
+**slightly different probabilities without any error**. `src/model_store.py` therefore compares the loaded model with reference
+predictions stored in `models/artifacts.json` and, if they do not match or loading fails, **retrains the same pipeline from
+`data/WA_Fn-UseC_-Telco-Customer-Churn.csv` at startup** (a few seconds). The "Model & business report" tab shows which case happened.
+The most reliable setup is still a fresh virtual environment with `pip install -r requirements.txt`.
 
 ## 7. Repository structure
 ```
@@ -161,6 +169,7 @@ src/
   business.py                cost function, threshold search, risk levels, expected revenue saved
   explain.py                 SHAP top-3 reasons per customer
   predict.py                 probability + risk level + decision + reasons
+  model_store.py             safe model loading: version check + automatic retrain fallback
   train.py                   retrain the final model from the raw CSV
 models/                      churn_model.joblib, churn_explain_pipeline.joblib, artifacts.json
 data/                        raw Telco CSV, sample_customers.csv
