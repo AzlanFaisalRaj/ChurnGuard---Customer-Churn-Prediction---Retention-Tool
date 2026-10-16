@@ -1,0 +1,167 @@
+{
+  "threshold": 0.4,
+  "risk_levels": {
+    "low_below": 0.4,
+    "high_from": 0.7
+  },
+  "calibration_method": "none",
+  "model": "XGBoost",
+  "imbalance_strategy": "none",
+  "costs": {
+    "value_months": 12,
+    "offer_cost": 100,
+    "offer_success": 0.3
+  },
+  "features": {
+    "numeric": [
+      "tenure",
+      "MonthlyCharges",
+      "TotalCharges"
+    ],
+    "binary": [
+      "SeniorCitizen"
+    ],
+    "categorical": [
+      "gender",
+      "Partner",
+      "Dependents",
+      "PhoneService",
+      "MultipleLines",
+      "InternetService",
+      "OnlineSecurity",
+      "OnlineBackup",
+      "DeviceProtection",
+      "TechSupport",
+      "StreamingTV",
+      "StreamingMovies",
+      "Contract",
+      "PaperlessBilling",
+      "PaymentMethod"
+    ]
+  },
+  "categorical_values": {
+    "gender": [
+      "Female",
+      "Male"
+    ],
+    "Partner": [
+      "No",
+      "Yes"
+    ],
+    "Dependents": [
+      "No",
+      "Yes"
+    ],
+    "PhoneService": [
+      "No",
+      "Yes"
+    ],
+    "MultipleLines": [
+      "No",
+      "No phone service",
+      "Yes"
+    ],
+    "InternetService": [
+      "DSL",
+      "Fiber optic",
+      "No"
+    ],
+    "OnlineSecurity": [
+      "No",
+      "No internet service",
+      "Yes"
+    ],
+    "OnlineBackup": [
+      "No",
+      "No internet service",
+      "Yes"
+    ],
+    "DeviceProtection": [
+      "No",
+      "No internet service",
+      "Yes"
+    ],
+    "TechSupport": [
+      "No",
+      "No internet service",
+      "Yes"
+    ],
+    "StreamingTV": [
+      "No",
+      "No internet service",
+      "Yes"
+    ],
+    "StreamingMovies": [
+      "No",
+      "No internet service",
+      "Yes"
+    ],
+    "Contract": [
+      "Month-to-month",
+      "One year",
+      "Two year"
+    ],
+    "PaperlessBilling": [
+      "No",
+      "Yes"
+    ],
+    "PaymentMethod": [
+      "Bank transfer (automatic)",
+      "Credit card (automatic)",
+      "Electronic check",
+      "Mailed check"
+    ]
+  },
+  "numeric_ranges": {
+    "tenure": [
+      0.0,
+      72.0
+    ],
+    "MonthlyCharges": [
+      18.25,
+      118.75
+    ],
+    "TotalCharges": [
+      18.8,
+      8684.8
+    ]
+  },
+  "labels": {
+    "tenure": "Tenure",
+    "MonthlyCharges": "Monthly charges",
+    "TotalCharges": "Total charges",
+    "SeniorCitizen": "Senior citizen",
+    "Contract": "Contract type",
+    "InternetService": "Internet service",
+    "PaymentMethod": "Payment method",
+    "TechSupport": "Tech support",
+    "OnlineSecurity": "Online security",
+    "OnlineBackup": "Online backup",
+    "DeviceProtection": "Device protection",
+    "StreamingTV": "Streaming TV",
+    "StreamingMovies": "Streaming movies",
+    "PaperlessBilling": "Paperless billing",
+    "MultipleLines": "Multiple lines",
+    "PhoneService": "Phone service",
+    "Partner": "Has partner",
+    "Dependents": "Has dependents",
+    "gender": "Gender"
+  },
+  "test_metrics": {
+    "threshold": 0.4,
+    "pr_auc": 0.6584270648823234,
+    "roc_auc": 0.8474992895709008,
+    "precision": 0.5980392156862745,
+    "recall": 0.6524064171122995,
+    "f1": 0.6240409207161125,
+    "brier": 0.13499783460364204
+  },
+  "versions": {
+    "scikit-learn": "1.6.1",
+    "xgboost": "3.4.1",
+    "imbalanced-learn": "0.14.2",
+    "shap": "0.52.0",
+    "pandas": "2.2.3",
+    "numpy": "2.1.3"
+  }
+}
