@@ -14,6 +14,12 @@ from src.business import customer_value, expected_impact, load_test_impact
 from src.pipeline import FEATURES
 from src.predict import predict_dataframe
 
+import spaces
+
+@spaces.GPU
+def gpu_warmup():
+    return "ok"
+
 MAX_ROWS = 5000
 CAT = cfg.ARTIFACTS["categorical_values"]
 COLORS = {"Low": "#16a34a", "Medium": "#d97706", "High": "#dc2626"}

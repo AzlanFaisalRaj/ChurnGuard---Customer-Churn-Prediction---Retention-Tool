@@ -7,3 +7,4 @@ venv/
 models_retrained/
 .env
 models_runtime/
+*.joblib
