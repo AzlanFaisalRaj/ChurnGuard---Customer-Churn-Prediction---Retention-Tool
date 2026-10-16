@@ -15,8 +15,7 @@ pinned: false
 Predicts which telecom customers are likely to churn, **why**, and which ones are worth an offer.
 Built on imbalanced data with a cost-based decision threshold and per-customer SHAP explanations.
 
-- **Live demo:** `<ADD HUGGING FACE SPACE URL>`
-- **Demo video (2-3 min):** `<ADD LOOM / YOUTUBE URL>`
+- **Live demo:** [`<ADD HUGGING FACE SPACE URL>`](https://huggingface.co/spaces/aziii08/churnguard2)
 - **Code:** this repository
 
 ## 1. Problem
